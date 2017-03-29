@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+# All the settings which must not appear in the git repo go here
 from . import settings_secret
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
