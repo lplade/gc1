@@ -16,19 +16,9 @@ from django.db import models
 # 			downloaded from the Gutenberg site in the last 30 days.
 
 
-class Ebook(models.Model):
-    ebook_id = models.IntegerField(unique=True)
-    creator_id = models.ForeignKey('Creator', on_delete=models.CASCADE)
-    title = models.CharField(max_length=128, blank=False)
-    # subjects use another table
-    # language use another table?
-    type = models.CharField(max_length=128)  # do we need any besides 'text'
-    # formats use another table? or just pull text
-    download_count = models.IntegerField
-
-
 # Creator is the DublinCore catchall term for author
 class Creator(models.Model):
+
     creator_id = models.IntegerField(unique=True)
     name = models.CharField(max_length=128)  # Last name, first name
     aliases = models.TextField  # TODO serialize multiple names in JSON?
@@ -37,8 +27,29 @@ class Creator(models.Model):
 
     class Meta:
         # Name + birth + death can be used to uniquely ID an author
-        unique_together = ('name', 'birth_year', 'death_year')
+        # TODO make this work
+        # unique_together = ['name', 'birth_year', 'death_year']
         ordering = ['name']
 
     def __unicode__(self):
         return '{} ({}-{})'.format(self.name, self.birth_year, self.death_year)
+
+
+class Ebook(models.Model):
+    ebook_id = models.IntegerField(unique=True)
+    creator = models.ForeignKey(Creator, related_name='ebooks', on_delete=models.CASCADE)
+    title = models.CharField(max_length=128, blank=False)
+    # subjects use another table
+    # language use another table?
+    type = models.CharField(max_length=128)  # do we need any besides 'text'
+    # formats use another table? or just pull text
+    download_count = models.IntegerField
+
+    def __unicode__(self):
+        return self.title
+
+    @property
+    def creator_name(self):
+        return self.creator.__unicode__()
+
+

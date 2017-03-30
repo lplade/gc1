@@ -7,7 +7,7 @@ class EbookSerializer(serializers.ModelSerializer):
     """Maps Model to JSON"""
 
     # http://stackoverflow.com/questions/20633313/django-rest-framework-get-related-model-field-in-serializer
-    creator = CreatorSerializer(source='creator')
+    creator = CreatorSerializer(source='creator', read_only=True)
 
     class Meta:
         model = Ebook
