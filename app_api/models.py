@@ -27,11 +27,18 @@ class Ebook(models.Model):
     download_count = models.IntegerField
 
 
-# Creator is the DublinCore catchall term for authors
+# Creator is the DublinCore catchall term for author
 class Creator(models.Model):
     creator_id = models.IntegerField(unique=True)
     name = models.CharField(max_length=128)  # Last name, first name
     aliases = models.TextField  # TODO serialize multiple names in JSON?
     birth_year = models.IntegerField
     death_year = models.IntegerField
-    # Name + birth + death can be used to uniquely ID an author
+
+    class Meta:
+        # Name + birth + death can be used to uniquely ID an author
+        unique_together = ('name', 'birth_year', 'death_year')
+        ordering = ['name']
+
+    def __unicode__(self):
+        return '{} ({}-{})'.format(self.name, self.birth_year, self.death_year)
