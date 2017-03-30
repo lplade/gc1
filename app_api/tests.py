@@ -1,6 +1,5 @@
 from django.test import TestCase
-from .models import Ebook
-from .models import Creator
+from .models import Ebook, Creator
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.core.urlresolvers import reverse
