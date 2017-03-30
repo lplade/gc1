@@ -48,13 +48,53 @@ class ViewTestCase(TestCase):
     def setUp(self):
         """Define the test client and other test variables"""
         self.client = APIClient()
+        self.creator_data = {
+            'creator_id': '999998',
+            'name': 'Writersworth, Herbert',
+            'birth_year': '1920',
+            'death_year': '1979'
+        }
         self.ebook_data = {
             'ebook_id': '999997',
-            'creator': {
-                'creator_id': '999998',
-                'name': 'Writersworth, Herbert',
-                'birth_year': '1920',
-                'death_year': '1979'
-            },
+            'creator': self.creator_data,
             'title': 'Fine Work of Literature'
         }
+        self.response = self.client.post(
+            reverse('create'),
+            self.ebook_data,
+            format='json'
+        )
+
+    def test_api_can_create_a_book(self):
+        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
+
+    def test_api_can_get_a_book(self):
+        ebook = Ebook.objects.get()
+        response = self.client.get(
+            reverse('details'),
+            kwargs={'pk': ebook.id},
+            format='json'
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, ebook)
+
+    # TODO test for updating
+    # def test_api_can_update_book(self):
+    #     change_ebook = {'title': 'Some other name'}
+    #     res = self.client.put(
+    #         reverse('details', kwargs={'pk': ebook.id}),
+    #         change_ebook,
+    #         format='json'
+    #     )
+    #     self.assertEqual(res.status_code, status.HTTP_200_OK)
+    #
+
+    def test_api_can_delete_book(self):
+        ebook = Ebook.objects.get()
+        response = self.client.delete(
+            reverse('details', kwargs={'pk': ebook.id}),
+            format='json',
+            follow=True
+        )
+        self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)

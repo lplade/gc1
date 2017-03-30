@@ -19,4 +19,16 @@ class EbookSerializer(serializers.ModelSerializer):
         model = Ebook
         fields = ('ebook_id', 'creator', 'title')  # TODO do anything with other fields?
 
+    # TODO make create() and update() methods
+
+    # def create(self, validated_data):
+    #     creator_data = validated_data.pop('creator')
+    #     ebook = Ebook.objects.create(**validated_data)
+    #     return ebook
+
+    # def update(self, validated_data):
+    #     creator_data = validated_data.pop('creator')
+
+
+
 
