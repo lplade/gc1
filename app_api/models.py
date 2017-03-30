@@ -22,13 +22,13 @@ class Creator(models.Model):
     creator_id = models.IntegerField(unique=True)
     name = models.CharField(max_length=128)  # Last name, first name
     aliases = models.TextField  # TODO serialize multiple names in JSON?
-    birth_year = models.IntegerField
-    death_year = models.IntegerField
+    birth_year = models.IntegerField(blank=True, null=True)
+    death_year = models.IntegerField(blank=True, null=True)
 
     class Meta:
         # Name + birth + death can be used to uniquely ID an author
         # TODO make this work
-        # unique_together = ['name', 'birth_year', 'death_year']
+        # unique_together = ['name', 'birth year', 'death year']
         ordering = ['name']
 
     def __unicode__(self):
@@ -41,9 +41,9 @@ class Ebook(models.Model):
     title = models.CharField(max_length=128, blank=False)
     # subjects use another table
     # language use another table?
-    type = models.CharField(max_length=128)  # do we need any besides 'text'
+    type = models.CharField(blank=True, null=True, max_length=128)  # do we need any besides 'text'
     # formats use another table? or just pull text
-    download_count = models.IntegerField
+    download_count = models.IntegerField(blank=True, null=True)
 
     def __unicode__(self):
         return self.title
